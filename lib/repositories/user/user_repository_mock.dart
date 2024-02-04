@@ -16,7 +16,7 @@ class UserRepositoryMock implements UserRepository {
       email: "admin@admin.com",
       password: "12345678",
       currency: "EUR",
-      balance: 100.0,
+      balance: 0.98,
       automaticProcessing: false,
       isAdmin: false,
       active: true,

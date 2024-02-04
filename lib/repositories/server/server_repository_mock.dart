@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:pureservers/data/server/server.dart';
+import 'package:pureservers/data/status.dart';
 import 'package:pureservers/repositories/server/server_repository.dart';
 
 class ServerRepositoryMock implements ServerRepository {
@@ -75,5 +76,10 @@ class ServerRepositoryMock implements ServerRepository {
   @override
   Future<String> restartServer(String serverId) async {
     return "Requested";
+  }
+
+  @override
+  Future<Status> buyServer(String tariffId) async {
+    return Status(success: true, message: "Server created");
   }
 }

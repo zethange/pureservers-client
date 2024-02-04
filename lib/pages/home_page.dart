@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pureservers/core/di.dart';
 import 'package:pureservers/data/server/server.dart' as server;
+import 'package:pureservers/data/user/user.dart';
 import 'package:pureservers/repositories/server/server_repository.dart';
+import 'package:pureservers/repositories/user/user_repository.dart';
 import 'package:pureservers/widgets/pay_new_server.dart';
 import 'package:pureservers/widgets/server_widget.dart';
 
@@ -17,8 +19,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  final ServerRepository _repository = getIt();
+  final ServerRepository _serverRepository = getIt();
+  final UserRepository _userRepository = getIt();
+
   late Future<List<server.Server>> _futureServers;
+  late Future<User?> _user;
   late Timer timer;
   bool _withIndicator = true;
 
@@ -26,7 +31,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       setState(() {
         _withIndicator = false;
-        _futureServers = _repository.getServers();
+        _futureServers = _serverRepository.getServers();
       });
     });
   }
@@ -35,7 +40,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _futureServers = _repository.getServers();
+    _futureServers = _serverRepository.getServers();
+    _user = _userRepository.getUser();
 
     startTimer();
   }
@@ -49,7 +55,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<void> _refresh() async {
     setState(() {
       _withIndicator = true;
-      _futureServers = _repository.getServers();
+      _futureServers = _serverRepository.getServers();
     });
   }
 
@@ -70,6 +76,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
         actions: [
+          FutureBuilder(
+            future: _user,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (!snapshot.hasData) {
+                return const Center(
+                    child: Text('Не удалось получить пользователя'));
+              }
+
+              final user = snapshot.data!;
+              return Text(
+                  '${user.balance.toStringAsFixed(2)} ${user.currency}');
+            },
+          ),
           IconButton(
             onPressed: () {
               showModalBottomSheet(
@@ -106,7 +128,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 return ServerCard(
                   server: server,
                   onStop: () async {
-                    await _repository.stopServer(server.id);
+                    await _serverRepository.stopServer(server.id);
 
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -115,7 +137,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     }
                   },
                   onStart: () async {
-                    await _repository.startServer(server.id);
+                    await _serverRepository.startServer(server.id);
 
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -124,7 +146,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     }
                   },
                   onRestart: () async {
-                    await _repository.restartServer(server.id);
+                    await _serverRepository.restartServer(server.id);
 
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

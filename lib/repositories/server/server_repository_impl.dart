@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pureservers/core/config.dart';
 import 'package:pureservers/data/server/server.dart';
+import 'package:pureservers/data/status.dart';
 import 'package:pureservers/repositories/server/server_repository.dart';
 
 class ServerRepositoryImpl implements ServerRepository {
@@ -41,5 +42,55 @@ class ServerRepositoryImpl implements ServerRepository {
     final res = await dio.post('${AppConfig.apiUrl}/servers/restart',
         data: jsonEncode(serverId));
     return res.data;
+  }
+
+  @override
+  Future<Status> buyServer(String tariffId) async {
+    final res = await dio.post(
+      '${AppConfig.apiUrl}/servers/order',
+      data: jsonEncode(tariffId),
+      options: Options(
+        validateStatus: (status) => true,
+      ),
+    );
+
+    switch (res.data) {
+      case "NoData":
+        return Status(success: false, message: "No selected id");
+      case "NoIpsAvailable":
+        return Status(
+          success: false,
+          message: "Нет доступных IP адрессов",
+        );
+      case "NoOsAvailable":
+        return Status(
+          success: false,
+          message: "Нет доступных ОС на узле",
+        );
+      case "FailedToCreateServer":
+        return Status(
+          success: false,
+          message: "При создании сервера произошла ошибка",
+        );
+      case "WhoAreU":
+        return Status(
+          success: false,
+          message: "Вы не вошли в аккаунт",
+        );
+      case "NotEnoughFunds":
+        return Status(
+          success: false,
+          message: "Недостаточно денег на балансе",
+        );
+      case "NoTariff":
+        return Status(
+          success: false,
+          message: "Тариф не существует",
+        );
+      case "NoNodes":
+        return Status(success: false, message: "Нет доступных нод");
+      default:
+        return Status(success: true, message: 'Сервер создан');
+    }
   }
 }

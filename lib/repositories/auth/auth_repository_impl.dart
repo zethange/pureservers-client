@@ -14,23 +14,25 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Status> login(String email, String password) async {
-    final res = await dio.post('${AppConfig.apiUrl}/auth/login',
-        data: jsonEncode({'email': email, 'password': password}));
+    final res = await dio.post(
+      '${AppConfig.apiUrl}/auth/login',
+      data: jsonEncode({'email': email, 'password': password}),
+      options: Options(validateStatus: (status) => true),
+    );
+
     switch (res.data) {
       case "FillFields":
-        return Status(success: false, message: "Not all fields are filled in");
+        return Status(success: false, message: "Не все поля заполнены");
       case "UserNotExists":
-        return Status(success: false, message: "The user does not exist");
+        return Status(success: false, message: "Логин или пароль неверный");
       case "UserBlocked":
-        return Status(success: true, message: "You have been blocked");
+        return Status(success: true, message: "Вы были заблокированы");
       case "LoggedIn":
         dio.options.headers['Session'] = res.headers['Session'];
-        debugPrint('successfuly logged in');
-        return Status(
-            success: true, message: "You have successfully logged in");
+        return Status(success: true, message: "Вы успешно вошли в систему");
     }
 
-    return Status(success: false, message: "Something went wrong");
+    return Status(success: false, message: "Что-то пошло не так");
   }
 
   @override

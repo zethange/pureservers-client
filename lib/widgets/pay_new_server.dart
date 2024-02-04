@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pureservers/core/di.dart';
 import 'package:pureservers/data/tariff/tariff.dart';
+import 'package:pureservers/repositories/server/server_repository.dart';
 import 'package:pureservers/repositories/tariff/tariff_repository.dart';
 
 class PayNewServerBottomSheet extends StatefulWidget {
@@ -12,6 +13,7 @@ class PayNewServerBottomSheet extends StatefulWidget {
 
 class PayNewServerBottomSheetState extends State<PayNewServerBottomSheet> {
   final TariffRepository _repository = getIt();
+  final ServerRepository _serverRepository = getIt();
   late Future<List<Tariff>> _tariffs;
   bool _selected = false;
   late Tariff _selectedTariff;
@@ -114,7 +116,17 @@ class PayNewServerBottomSheetState extends State<PayNewServerBottomSheet> {
               '${_selectedTariff.visibleName}, будет списано: ${_selectedTariff.price} EUR',
             ),
             const Spacer(),
-            FilledButton(onPressed: () {}, child: const Text('Купить'))
+            FilledButton(
+                onPressed: () async {
+                  final status =
+                      await _serverRepository.buyServer(_selectedTariff.id);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(status.message)));
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Купить'))
           ]),
       ]),
     );

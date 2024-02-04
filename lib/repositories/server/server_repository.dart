@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:pureservers/data/server/server.dart';
+import 'package:pureservers/data/status.dart';
 
 abstract class ServerRepository {
   final Dio dio;
@@ -9,4 +10,5 @@ abstract class ServerRepository {
   Future<String> startServer(String serverId);
   Future<String> stopServer(String serverId);
   Future<String> restartServer(String serverId);
+  Future<Status> buyServer(String tariffId);
 }
