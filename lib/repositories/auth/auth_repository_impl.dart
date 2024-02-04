@@ -4,11 +4,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pureservers/core/config.dart';
 import 'package:pureservers/data/status.dart';
+import 'package:pureservers/repositories/auth/auth_repository.dart';
 
-class AuthRepository {
+class AuthRepositoryImpl implements AuthRepository {
+  @override
   final Dio dio;
-  AuthRepository(this.dio);
 
+  AuthRepositoryImpl(this.dio);
+
+  @override
   Future<Status> login(String email, String password) async {
     final res = await dio.post('${AppConfig.apiUrl}/auth/login',
         data: jsonEncode({'email': email, 'password': password}));
@@ -27,5 +31,10 @@ class AuthRepository {
     }
 
     return Status(success: false, message: "Something went wrong");
+  }
+
+  @override
+  void logout() {
+    dio.options.headers.remove("Session");
   }
 }

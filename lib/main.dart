@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pureservers/core/di.dart';
 import 'package:pureservers/pages/auth_page.dart';
 import 'package:pureservers/pages/home_page.dart';
-import 'package:pureservers/repositories/auth_repository.dart';
+import 'package:pureservers/repositories/auth/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -21,13 +21,18 @@ void main() async {
 
 class PureServersApp extends StatelessWidget {
   final Widget homePage;
+
   const PureServersApp({super.key, required this.homePage});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PureServers',
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.cyanAccent, brightness: Brightness.dark),
+        useMaterial3: true,
+      ),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyanAccent),
         useMaterial3: true,

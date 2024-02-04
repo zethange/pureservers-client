@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pureservers/core/di.dart';
 import 'package:pureservers/data/tariff/tariff.dart';
-import 'package:pureservers/repositories/tariff_repository.dart';
+import 'package:pureservers/repositories/tariff/tariff_repository.dart';
 
 class PayNewServerBottomSheet extends StatefulWidget {
   const PayNewServerBottomSheet({super.key});

@@ -4,18 +4,22 @@ import 'package:dio/dio.dart';
 import 'package:pureservers/core/config.dart';
 import 'package:pureservers/data/os/os.dart';
 import 'package:pureservers/data/status.dart';
+import 'package:pureservers/repositories/os/os_repository.dart';
 
-class OsRepository {
+class OsRepositoryImpl implements OsRepository {
+  @override
   final Dio dio;
 
-  OsRepository(this.dio);
+  OsRepositoryImpl(this.dio);
 
+  @override
   Future<List<OS>> getOs(String serverId) async {
     final res = await dio.post('${AppConfig.apiUrl}/servers/get-reinstall-oses',
         data: jsonEncode(serverId));
     return (res.data as List<dynamic>).map((e) => OS.fromJson(e)).toList();
   }
 
+  @override
   Future<Status> reinstallOs(String serverId, String selectedOption) async {
     final res = await dio.post('${AppConfig.apiUrl}/servers/reinstall');
 

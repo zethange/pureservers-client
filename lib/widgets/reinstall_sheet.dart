@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pureservers/core/di.dart';
 import 'package:pureservers/data/os/os.dart';
-import 'package:pureservers/repositories/os_repository.dart';
+import 'package:pureservers/repositories/os/os_repository.dart';
 
 class ReinstallSheet extends StatefulWidget {
   final String serverId;
@@ -79,7 +79,9 @@ class _ReinstallSheetState extends State<ReinstallSheet> {
                     widget.serverId,
                     selectedOption,
                   );
-                  Navigator.pop(context);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
                 },
                 child: const Text('Переустановить'),
               ),

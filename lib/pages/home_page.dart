@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pureservers/core/di.dart';
 import 'package:pureservers/data/server/server.dart' as server;
-import 'package:pureservers/repositories/server_repository.dart';
+import 'package:pureservers/repositories/server/server_repository.dart';
 import 'package:pureservers/widgets/pay_new_server.dart';
 import 'package:pureservers/widgets/server_widget.dart';
 

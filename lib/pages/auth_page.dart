@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pureservers/core/di.dart';
 import 'package:pureservers/data/status.dart';
 import 'package:pureservers/pages/home_page.dart';
-import 'package:pureservers/repositories/auth_repository.dart';
+import 'package:pureservers/repositories/auth/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthPage extends StatefulWidget {
@@ -20,6 +20,16 @@ class _AuthPageState extends State<AuthPage> {
   Future<void> _onPressed() async {
     if (_email.text == "" && _password.text == "") return;
     final Status data = await _repository.login(_email.text, _password.text);
+
+    debugPrint(data.success.toString());
+    if (context.mounted) {
+      // show snackbar
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(data.message),
+        duration: const Duration(seconds: 1),
+      ));
+    }
+
     if (data.success) {
       final SharedPreferences preferences =
           await SharedPreferences.getInstance();
@@ -81,7 +91,9 @@ class _AuthPageState extends State<AuthPage> {
               SizedBox(
                 width: 1000,
                 child: FilledButton(
-                    onPressed: _onPressed, child: const Text('Войти')),
+                  onPressed: _onPressed,
+                  child: const Text('Войти'),
+                ),
               )
             ],
           ),
