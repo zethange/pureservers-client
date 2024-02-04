@@ -1,7 +1,7 @@
 name: Build and Release APK
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,14 +17,37 @@ jobs:
           flutter-version: "3.16.9"
           channel: "stable"
 
+      - name: Extract Version
+        id: extract_version
+        run: |
+          VERSION=$(grep -oP "^version: [^\+]+" pubspec.yaml | tail -c +10)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Get packages
         run: flutter pub get
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+
       - name: Build APK
         run: flutter build apk --release
+
+      - name: Sign app APK
+        uses: r0adkll/sign-android-release@v1
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: build/app/outputs/flutter-apk
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
           name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: ${{ steps.sign_app.signedReleaseFile0 }}

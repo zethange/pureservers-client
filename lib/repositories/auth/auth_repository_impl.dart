@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:pureservers/core/config.dart';
 import 'package:pureservers/data/status.dart';
 import 'package:pureservers/repositories/auth/auth_repository.dart';

@@ -22,7 +22,7 @@ Future<void> configureDependence() async {
   final Dio dio = Dio();
   getIt.registerSingleton(dio);
 
-  if (kReleaseMode) {
+  if (kDebugMode) {
     getIt.registerFactory<AuthRepository>(() => AuthRepositoryImpl(getIt()));
     getIt
         .registerFactory<ServerRepository>(() => ServerRepositoryImpl(getIt()));
