@@ -1,4 +1,4 @@
-package com.example.pureservers
+package io.zethange.pureservers
 
 import io.flutter.embedding.android.FlutterActivity
 
