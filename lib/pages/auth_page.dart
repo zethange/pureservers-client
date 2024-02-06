@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pureservers/core/di.dart';
 import 'package:pureservers/data/status.dart';
-import 'package:pureservers/pages/home_page.dart';
+import 'package:pureservers/pages/entry_page.dart';
 import 'package:pureservers/repositories/auth/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,7 +41,7 @@ class _AuthPageState extends State<AuthPage> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => const HomePage(title: 'PureServers'),
+            builder: (context) => const EntryPage(),
           ),
           (route) => false,
         );
@@ -53,6 +53,7 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Авторизация'),
       ),
       body: Container(
