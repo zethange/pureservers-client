@@ -33,7 +33,11 @@ class _InvoicePageState extends State<InvoicePage> {
         title: const Text("Платежи"),
       ),
       body: RefreshIndicator(
-        onRefresh: () async {},
+        onRefresh: () async {
+          setState(() {
+            _invoiceList = _invoiceRepository.getInvoices();
+          });
+        },
         child: FutureBuilder(
           future: _invoiceList,
           builder: (context, snapshot) {

@@ -14,6 +14,8 @@ import 'package:pureservers/repositories/server/server_repository_impl.dart';
 import 'package:pureservers/repositories/server/server_repository_mock.dart';
 import 'package:pureservers/repositories/tariff/tariff_repository.dart';
 import 'package:pureservers/repositories/tariff/tariff_repository_impl.dart';
+import 'package:pureservers/repositories/ticket/ticket_repository.dart';
+import 'package:pureservers/repositories/ticket/ticket_repository_impl.dart';
 import 'package:pureservers/repositories/user/user_repository.dart';
 import 'package:pureservers/repositories/user/user_repository_impl.dart';
 import 'package:pureservers/repositories/user/user_repository_mock.dart';
@@ -43,6 +45,9 @@ Future<void> configureDependence() async {
     );
     getIt.registerFactory<InvoiceRepository>(
       () => InvoiceRepositoryImpl(getIt()),
+    );
+    getIt.registerFactory<TicketRepository>(
+      () => TicketRepositoryImpl(getIt()),
     );
   } else {
     getIt.registerFactory<AuthRepository>(() => AuthRepositoryMock(getIt()));
