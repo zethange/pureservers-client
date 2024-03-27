@@ -93,4 +93,46 @@ class ServerRepositoryImpl implements ServerRepository {
         return Status(success: true, message: 'Сервер создан');
     }
   }
+
+  @override
+  Future<Status> enableNesting(String serverId) async {
+    final res = await dio.post(
+      '${AppConfig.apiUrl}/servers/enable-feature',
+      data: jsonEncode({
+        "feature": "nesting",
+        "server_id": serverId,
+      }),
+      options: Options(
+        validateStatus: (status) => true,
+      ),
+    );
+
+    if (res.statusCode == 200 && res.data == "Requested") {
+      return Status(
+        success: true,
+        message: "Заявка на включение nesting отправлена",
+      );
+    }
+
+    return Status(success: false, message: "Произошла ошибка");
+  }
+
+  @override
+  Future<Status> enableTun(String serverId) async {
+    final res = await dio.post('${AppConfig.apiUrl}/servers/enable-feature',
+        data: jsonEncode({
+          "feature": "tuntap",
+          "server_id": serverId,
+        }),
+        options: Options(
+          validateStatus: (status) => true,
+        ));
+
+    if (res.statusCode == 200 && res.data == "Requested") {
+      return Status(
+          success: true, message: "Заявка на включение tun/tap отправлена");
+    }
+
+    return Status(success: false, message: "Произошла ошибка");
+  }
 }

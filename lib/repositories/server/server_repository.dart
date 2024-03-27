@@ -11,4 +11,7 @@ abstract class ServerRepository {
   Future<String> stopServer(String serverId);
   Future<String> restartServer(String serverId);
   Future<Status> buyServer(String tariffId);
+
+  Future<Status> enableNesting(String serverId);
+  Future<Status> enableTun(String serverId);
 }

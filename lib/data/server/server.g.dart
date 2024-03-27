@@ -49,7 +49,9 @@ Server _$ServerFromJson(Map<String, dynamic> json) => Server(
           (json['linked_ips'] as List<dynamic>).map(LinkedIp.fromJson).toList(),
       tariffName: json['tariff_name'] as String,
       state: State.fromJson(json['state']),
-    );
+    )
+      ..tunTapEnabled = json['tuntap_enabled'] as bool?
+      ..nestingEnabled = json['nesting_enabled'] as bool?;
 
 Map<String, dynamic> _$ServerToJson(Server instance) => <String, dynamic>{
       '_id': instance.id,
@@ -62,5 +64,7 @@ Map<String, dynamic> _$ServerToJson(Server instance) => <String, dynamic>{
       'num_id': instance.numId,
       'linked_ips': instance.linkedIps,
       'tariff_name': instance.tariffName,
+      'tuntap_enabled': instance.tunTapEnabled,
+      'nesting_enabled': instance.nestingEnabled,
       'state': instance.state,
     };

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pureservers/data/server/server.dart';
 import 'package:pureservers/widgets/reinstall_sheet.dart';
+import 'package:pureservers/widgets/server_menu.dart';
 
 class ServerCard extends StatelessWidget {
   final Server server;
@@ -40,13 +41,9 @@ class ServerCard extends StatelessWidget {
                     borderRadius: const BorderRadius.all(
                       Radius.circular(10),
                     ),
-                    color: server.state.status == "running"
-                        ? Colors.green
-                        : Colors.red,
+                    color: server.getStatusColor(),
                   ),
-                  child: Text(server.state.status == "running"
-                      ? "Запущен"
-                      : "Остановлен"),
+                  child: Text(server.getStatus()),
                 ),
               ],
             ),
@@ -98,7 +95,9 @@ class ServerCard extends StatelessWidget {
               children: [
                 const Text('IP-адрес'),
                 const Spacer(),
-                SelectableText(server.linkedIps[0].ip),
+                SelectableText(server.linkedIps.isNotEmpty
+                    ? server.linkedIps[0].ip
+                    : 'IP не привязан'),
               ],
             ),
             const SizedBox(height: 2.5),
@@ -115,6 +114,22 @@ class ServerCard extends StatelessWidget {
                 const Text('Оплачено до'),
                 const Spacer(),
                 SelectableText(dateTimeToString(server.expiresAt)),
+              ],
+            ),
+            const SizedBox(height: 2.5),
+            Row(
+              children: [
+                const Text('TUN/TAP'),
+                const Spacer(),
+                Text(server.getTunTap()),
+              ],
+            ),
+            const SizedBox(height: 2.5),
+            Row(
+              children: [
+                const Text('Nesting'),
+                const Spacer(),
+                Text(server.getNesting()),
               ],
             ),
             const SizedBox(height: 5),
@@ -165,6 +180,21 @@ class ServerCard extends StatelessWidget {
                     ],
                   ),
                 const Spacer(),
+                Ink(
+                  decoration: const ShapeDecoration(
+                    color: Colors.tealAccent,
+                    shape: CircleBorder(),
+                  ),
+                  child: IconButton(
+                    onPressed: () => {
+                      showDialog(context: context, builder: (context) {
+                        return ServerMenu(server: server);
+                      })
+                    },
+                    icon: const Icon(Icons.menu),
+                    color: Colors.white,
+                  ),
+                ),
                 FilledButton(
                   onPressed: () {
                     showModalBottomSheet(
@@ -177,7 +207,7 @@ class ServerCard extends StatelessWidget {
                     );
                   },
                   child: const Text('Переустановить'),
-                )
+                ),
               ],
             ),
           ],
@@ -188,5 +218,5 @@ class ServerCard extends StatelessWidget {
 }
 
 String dateTimeToString(DateTime date) {
-  return '${date.year}.${9 >= date.month ? "0${date.month}" : date.month}.${date.day} ${date.hour}:${date.minute}';
+  return '${date.year}.${9 >= date.month ? "0${date.month}" : date.month}.${date.day > 9 ? date.day : '0${date.day}'} ${date.hour}:${date.minute > 9 ? date.minute : '0${date.minute}'}';
 }

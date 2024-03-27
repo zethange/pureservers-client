@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'server.g.dart';
@@ -70,6 +73,12 @@ class Server {
   @JsonKey(name: 'tariff_name')
   String tariffName;
 
+  @JsonKey(name: 'tuntap_enabled')
+  bool? tunTapEnabled;
+
+  @JsonKey(name: 'nesting_enabled')
+  bool? nestingEnabled;
+
   State state;
 
   Server({
@@ -92,4 +101,50 @@ class Server {
 
   static DateTime _fromJson(int int) =>
       DateTime.fromMillisecondsSinceEpoch(int);
+
+  String getStatus() {
+    if (status == "active") {
+      switch (state.status) {
+        case 'running':
+          return 'Запущен';
+        default:
+          return 'Остановлен';
+      }
+    } else if (status == "expired") {
+      return 'Не оплачен';
+    }
+
+    return 'Error';
+  }
+
+  Color getStatusColor() {
+    if (status == "active") {
+      switch (state.status) {
+        case 'running':
+          return Colors.green;
+        default:
+          return Colors.red;
+      }
+    } else if (status == "expired") {
+      return Colors.orange;
+    }
+
+    return Colors.black;
+  }
+
+  String getTunTap() {
+    final enabled = tunTapEnabled ?? false;
+    if (!enabled) {
+      return "Выключен";
+    }
+    return "Включен";
+  }
+
+  String getNesting() {
+    final enabled = nestingEnabled ?? false;
+    if (!enabled) {
+      return "Выключен";
+    }
+    return "Включен";
+  }
 }

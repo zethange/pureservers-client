@@ -82,4 +82,14 @@ class ServerRepositoryMock implements ServerRepository {
   Future<Status> buyServer(String tariffId) async {
     return Status(success: true, message: "Server created");
   }
+
+  @override
+  Future<Status> enableNesting(String serverId) async {
+    return Status(success: true, message: "Ok");
+  }
+
+  @override
+  Future<Status> enableTun(String serverId) async {
+    return Status(success: true, message: "Ok");
+  }
 }

@@ -94,6 +94,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               itemCount: servers.length,
               itemBuilder: (context, index) {
                 final server = servers[index];
+                // debugPrint(json.encode(server));
 
                 return ServerCard(
                   server: server,
