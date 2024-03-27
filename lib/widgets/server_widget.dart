@@ -195,19 +195,6 @@ class ServerCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                FilledButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return ReinstallSheet(
-                          serverId: server.id,
-                        );
-                      },
-                    );
-                  },
-                  child: const Text('Переустановить'),
-                ),
               ],
             ),
           ],
